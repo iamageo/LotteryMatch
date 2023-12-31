@@ -11,7 +11,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.iamageo.lotterymatch.R
 
-val paleWhite = Color(0xCCF3F7F9)
+val paleWhite = Color(0xFFE8F5E9)
 val paleBlack = Color(0xff222325)
 
 val Purple200 = Color(0xFFBB86FC)
@@ -31,9 +31,16 @@ val Red800 = Color(0xffd00036)
 val Red900 = Color(0xffc20029)
 
 val CustomDarkColorPalette = darkColors(
-    primary = Color.White,
-    primaryVariant = Color.Gray,
-    secondary = Color.Black
+    primary = Color(0xFF66BB6A),
+    primaryVariant = Color(0xFF338a3e),
+    secondary = Color(0xFFFFC107),
+    onPrimary = Color.Black,
+    onSecondary = Color.Black,
+    error = Color(0xFFCF6679),
+    background = Color(0xFFE8F5E9),
+    onBackground = Color.White,
+    surface = Color(0xFF121212),
+    onSurface = Color.White
 )
 
 val CustomLightColorsPalette = lightColors(
@@ -45,6 +52,7 @@ val CustomLightColorsPalette = lightColors(
     onSecondary = Color.White,
     error = Red800
 )
+
 
 private val montserrat = FontFamily(
     Font(R.font.montserrat_regular),
