@@ -1,4 +1,4 @@
-package com.iamageo.lotterymatch.ui
+package com.iamageo.lotterymatch.ui.components
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -52,15 +52,18 @@ fun OtpTextField(
         value = TextFieldValue(otpText, selection = TextRange(otpText.length)),
         onValueChange = {
             val formattedValue = it.text.filter { char -> char.isDigit() }
-            if (formattedValue.length <= otpCount * 2 &&
-                isValidInput(formattedValue) &&
-                hasNoDuplicates(formattedValue)) {
+            if (formattedValue.length <= otpCount * 2) {
+                /**
+                 * &&
+                 * isValidInput(formattedValue) &&
+                 * hasNoDuplicates(formattedValue
+                 */
                 onOtpTextChange.invoke(formattedValue, formattedValue.length == otpCount * 2)
             }
         },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
         decorationBox = {
-            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp, alignment = Alignment.CenterHorizontally), verticalAlignment = Alignment.CenterVertically) {
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                 repeat(otpCount) { index ->
                     CharView(
                         index = index,

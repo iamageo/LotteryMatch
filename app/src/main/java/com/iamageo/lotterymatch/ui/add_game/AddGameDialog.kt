@@ -1,4 +1,4 @@
-package com.iamageo.lotterymatch.ui
+package com.iamageo.lotterymatch.ui.add_game
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,6 +12,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.iamageo.lotterymatch.ui.components.OtpTextField
 
 @Composable
 fun AddGameDialog(onDismiss: () -> Unit, addLotteryViewModel: AddLotteryViewModel) {

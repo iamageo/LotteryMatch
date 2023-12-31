@@ -1,7 +1,5 @@
-package com.iamageo.lotterymatch.ui
+package com.iamageo.lotterymatch.ui.add_game
 
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -47,7 +45,7 @@ class AddLotteryViewModel @Inject constructor(
                                 id = currentNoteId
                             )
                         )
-                        _eventFlow.emit(UiEvents.SaveNottye)
+                        _eventFlow.emit(UiEvents.SaveLotteryGame)
                     } catch (e: InvalidLotteryException) {
                         e.message?.let { UiEvents.ShowSnackbar(it) }?.let { _eventFlow.emit(it) }
                     }
@@ -58,7 +56,7 @@ class AddLotteryViewModel @Inject constructor(
 
     sealed class UiEvents() {
         data class ShowSnackbar(val message: String) : UiEvents()
-        object SaveNottye : UiEvents()
+        object SaveLotteryGame : UiEvents()
     }
 
     fun formatTextWithComma(text: String): String {

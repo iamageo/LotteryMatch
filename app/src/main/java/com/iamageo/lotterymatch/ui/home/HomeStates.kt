@@ -1,4 +1,4 @@
-package com.iamageo.lotterymatch.ui
+package com.iamageo.lotterymatch.ui.home
 
 import com.iamageo.lotterymatch.domain.model.LotteryGame
 

@@ -1,8 +1,9 @@
-package com.iamageo.lotterymatch.ui
+package com.iamageo.lotterymatch.ui.home
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -29,7 +30,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.iamageo.lotterymatch.Screens
 import com.iamageo.lotterymatch.domain.model.LotteryGame
+import com.iamageo.lotterymatch.ui.add_game.AddGameDialog
+import com.iamageo.lotterymatch.ui.add_game.AddLotteryViewModel
+import com.iamageo.lotterymatch.ui.components.OtpTextField
 import kotlinx.coroutines.launch
 
 fun countMatches(game: LotteryGame, sortedNumbers: Set<Int>): Int {
@@ -62,7 +67,7 @@ fun HomeScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    showDialog = true
+                    navController.navigate(Screens.AddLotteryGame.route)
                 },
                 backgroundColor = MaterialTheme.colors.primary
             ) {
@@ -74,23 +79,22 @@ fun HomeScreen(
             }
         },
         topBar = {
-            TopAppBar(backgroundColor = MaterialTheme.colors.primary) {
-                Text(
-                    text = "Acerto Loteria",
-                    style = MaterialTheme.typography.h4,
-                    modifier = Modifier.padding(start = 8.dp)
-                )
-            }
+            TopAppBar(backgroundColor = MaterialTheme.colors.primary,
+                title = {
+                    Text(
+                        text = "Acerto Loteria",
+                        style = MaterialTheme.typography.h4,
+                        color = MaterialTheme.colors.onSurface,
+                        modifier = Modifier.padding(start = 8.dp)
+                    )
+                },
+                actions = {
+
+                }
+            )
         },
         scaffoldState = scaffoldState
     ) { padding ->
-        if (showDialog) {
-            AddGameDialog(
-                onDismiss = { showDialog = false },
-                addLotteryViewModel = addLotteryViewModel
-            )
-        }
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -105,7 +109,7 @@ fun HomeScreen(
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text(text = "Nenhum jogo cadastrado no momento.")
+                    Text(text = "Nenhum jogo cadastrado no momento.", color = MaterialTheme.colors.surface)
                 }
             }
 
@@ -123,9 +127,24 @@ fun HomeScreen(
                         )
                     OtpTextField(
                         otpText = otpText,
-                        onOtpTextChange = { value, _ -> otpText = value }
+                        onOtpTextChange = { value, _ ->
+                            otpText = value
+                            val sortedNumbers = value.chunked(2).mapNotNull { it.toIntOrNull() }.toSet()
+                            homeViewModel.filterAndSortGames(sortedNumbers)
+                        }
                     )
 
+                }
+            }
+
+            if(state.games.isNotEmpty()) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 8.dp, vertical = 8.dp),
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    Text(text = state.games.size.toString() + " jogos cadastrados.", color = MaterialTheme.colors.surface)
                 }
             }
 

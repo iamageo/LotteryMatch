@@ -1,4 +1,4 @@
-package com.iamageo.lotterymatch.ui
+package com.iamageo.lotterymatch.ui.home
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -30,11 +30,6 @@ class HomeViewModel @Inject constructor(
 
     private var getGamesJob: Job? = null
 
-    private var currentGameId: Int? = null
-
-    private val _eventFlow = MutableSharedFlow<UiEvents>()
-    val eventFlow = _eventFlow.asSharedFlow()
-
     init {
         getGames()
     }
@@ -58,28 +53,7 @@ class HomeViewModel @Inject constructor(
             is HomeEvents.ChangeTheme -> {
                 _state.value = state.value.copy(isDarkTheme = !state.value.isDarkTheme)
             }
-            is HomeEvents.AddGame -> {
-                viewModelScope.launch(Dispatchers.IO) {
-                    try {
-                        lotteryUseCases.addGame(
-                            LotteryGame(
-                                game = "1,4,22,45,58,60",
-                                timestamp = System.currentTimeMillis(),
-                                id = currentGameId
-                            )
-                        )
-                        _eventFlow.emit(UiEvents.AddGame)
-                    } catch (e: InvalidLotteryException) {
-
-                    }
-                }
-            }
         }
-    }
-
-    sealed class UiEvents() {
-        data class ShowSnackbar(val message: String) : UiEvents()
-        object AddGame : UiEvents()
     }
 
     private fun getGames() {
@@ -88,4 +62,25 @@ class HomeViewModel @Inject constructor(
             _state.value = state.value.copy(games = games)
         }.launchIn(viewModelScope)
     }
+
+    fun filterAndSortGames(sortedNumbers: Set<Int>) {
+        viewModelScope.launch {
+            lotteryUseCases.getAllGames().collect { games ->
+                val gamesWithMatchCount = games.map { game ->
+                    Pair(game, countMatches(game, sortedNumbers))
+                }.sortedByDescending { it.second }
+
+                val sortedGames = gamesWithMatchCount.map { it.first }
+                _state.value = state.value.copy(games = sortedGames)
+            }
+        }
+    }
+
+    companion object {
+        fun countMatches(game: LotteryGame, sortedNumbers: Set<Int>): Int {
+            val gameNumbers = game.game.split(",").mapNotNull { it.trim().toIntOrNull() }
+            return gameNumbers.count { it in sortedNumbers }
+        }
+    }
+
 }

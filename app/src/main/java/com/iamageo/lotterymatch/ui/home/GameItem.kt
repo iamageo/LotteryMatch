@@ -1,6 +1,5 @@
-package com.iamageo.lotterymatch.ui
+package com.iamageo.lotterymatch.ui.home
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
@@ -54,7 +53,7 @@ fun GameItem(
                     Icon(
                         imageVector = Icons.Default.Delete,
                         contentDescription = "Delete game",
-                        tint = if (isSystemInDarkTheme()) Color.White else Color.Black
+                        tint = if (isSystemInDarkTheme()) Color.Black else Color.White
                     )
                 }
             }

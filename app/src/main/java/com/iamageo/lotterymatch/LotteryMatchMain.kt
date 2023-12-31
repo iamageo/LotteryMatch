@@ -9,7 +9,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.iamageo.lotterymatch.theme.LotteryTheme
-import com.iamageo.lotterymatch.ui.HomeScreen
+import com.iamageo.lotterymatch.ui.add_game.AddGameScreen
+import com.iamageo.lotterymatch.ui.home.HomeScreen
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -32,6 +33,9 @@ class LotteryMatchMain: ComponentActivity() {
                     ) {
                         composable(route = Screens.LotteryMain.route) {
                             HomeScreen(navController = navController)
+                        }
+                        composable(route = Screens.AddLotteryGame.route) {
+                            AddGameScreen(navController = navController)
                         }
                     }
                 }
