@@ -1,10 +1,14 @@
 package com.iamageo.lotterymatch.ui.add_game
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.DropdownMenu
+import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
@@ -20,6 +24,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -36,6 +44,9 @@ fun AddGameScreen(
 
     val scaffoldState = rememberScaffoldState()
     val gameText by addLotteryViewModel.gameText.collectAsState()
+
+    var otpCount by remember { mutableIntStateOf(6) }
+    var showDropdown by remember { mutableStateOf(false) }
 
     LaunchedEffect(key1 = true) {
         addLotteryViewModel.eventFlow.collectLatest { event ->
@@ -88,6 +99,31 @@ fun AddGameScreen(
 
         Column(modifier = Modifier.padding(8.dp), horizontalAlignment = Alignment.CenterHorizontally) {
 
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text("Escolha a quantidade de pares: ",  style = MaterialTheme.typography.subtitle1, color = MaterialTheme.colors.surface,)
+                Box {
+                    Text(text = "$otpCount pares", modifier = Modifier.clickable { showDropdown = true }, color = MaterialTheme.colors.surface)
+                    DropdownMenu(
+                        expanded = showDropdown,
+                        onDismissRequest = { showDropdown = false }
+                    ) {
+                        (6..20).forEach { count ->
+                            DropdownMenuItem(onClick = {
+                                otpCount = count
+                                showDropdown = false
+                            }) {
+                                Text("$count pares")
+                            }
+                        }
+                    }
+                }
+            }
+
             Text(
                 text = "Informe os números do jogo abaixo.",
                 color = MaterialTheme.colors.surface,
@@ -96,7 +132,7 @@ fun AddGameScreen(
             )
 
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                OtpTextField(modifier = Modifier, otpText = gameText, onOtpTextChange = { newValue, _ ->
+                OtpTextField(otpCount = otpCount, modifier = Modifier, otpText = gameText, onOtpTextChange = { newValue, _ ->
                     addLotteryViewModel.onEvent(AddLotteryEvents.EnteredGame(newValue))
                 })
             }

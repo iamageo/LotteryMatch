@@ -4,7 +4,13 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -19,11 +25,13 @@ fun NumbersRow(gameNumbers: String, otpText: String) {
     val numbers = gameNumbers.split(',').map { it.trim() }
     val otpNumbers = otpText.chunked(2)
 
-    Row(
-        horizontalArrangement = Arrangement.spacedBy(2.dp, alignment = Alignment.CenterHorizontally),
-        verticalAlignment = Alignment.CenterVertically
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(6),
+        horizontalArrangement = Arrangement.spacedBy(2.dp),
+        verticalArrangement = Arrangement.spacedBy(2.dp),
+        modifier = Modifier.heightIn(max = 300.dp)
     ) {
-        numbers.forEach { number ->
+        items(numbers) { number ->
             val backgroundColor = if (otpNumbers.contains(number)) {
                 MaterialTheme.colors.primary
             } else {
